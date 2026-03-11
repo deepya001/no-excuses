@@ -1,32 +1,40 @@
-const users = {
-  admin: {
-    password: "queen123",
-    role: "admin"
-  },
-  CHN: {
-    password: "begood123",
-    role: "user"
-  }
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.10.0/firebase-app.js"
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  updateDoc,
+  doc,
+  onSnapshot,
+  query,
+  orderBy,
+  serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.10.0/firebase-firestore.js"
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBcDLdF0VWLjzlexPbYud5JWlJKQjapRNY",
+  authDomain: "no-excuses-c9f61.firebaseapp.com",
+  projectId: "no-excuses-c9f61",
+  storageBucket: "no-excuses-c9f61.firebasestorage.app",
+  messagingSenderId: "488365500196",
+  appId: "1:488365500196:web:8a419b804451567f9df5b1",
+  measurementId: "G-F6LKE7P5F0"
 }
 
-const STORAGE_KEY = "compliments"
+const app = initializeApp(firebaseConfig)
+const db = getFirestore(app)
+
+const users = {
+  admin: { password: "queen123", role: "admin" },
+  CHN: { password: "begood123", role: "user" }
+}
 
 let currentUser = null
-let compliments = loadLocalCompliments()
+let compliments = []
+let unsubscribe = null
 
-function loadLocalCompliments() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY)
-    const data = raw ? JSON.parse(raw) : []
-    return Array.isArray(data) ? data : []
-  } catch {
-    return []
-  }
-}
-
-function save() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(compliments))
-}
+const complimentsCol = collection(db, "compliments")
+const complimentsQuery = query(complimentsCol, orderBy("createdAt", "desc"))
 
 function login() {
   let u = document.getElementById("username").value
@@ -37,21 +45,26 @@ function login() {
     document.getElementById("login").style.display = "none"
     document.getElementById("main").style.display = "block"
     createHearts()
-    render()
+    startRealtime()
   } else {
     alert("Wrong login")
   }
 }
 
-window.addEventListener("storage", (event) => {
-  if (event.key === STORAGE_KEY) {
-    compliments = loadLocalCompliments()
-    if (currentUser) render()
-  }
-})
+function startRealtime() {
+  if (unsubscribe) unsubscribe()
+  unsubscribe = onSnapshot(
+    complimentsQuery,
+    (snapshot) => {
+      compliments = snapshot.docs.map((d) => ({ id: d.id, ...d.data() }))
+      render()
+    },
+    (err) => console.error(err)
+  )
+}
 
 /* ADD COMPLIMENT */
-function addCompliment() {
+async function addCompliment() {
   if (users[currentUser].role !== "user") {
     alert("Only CHN can add compliments")
     return
@@ -60,18 +73,17 @@ function addCompliment() {
   let text = prompt("Write today's compliment")
   if (!text) return
 
-  compliments.push({
+  await addDoc(complimentsCol, {
     text: text,
     points: 0,
-    review: ""
+    review: "",
+    createdBy: currentUser,
+    createdAt: serverTimestamp()
   })
-
-  save()
-  render()
 }
 
 /* ADMIN REVIEW */
-function review(i) {
+async function review(id) {
   if (users[currentUser].role !== "admin") return
 
   let pts = prompt("Give points")
@@ -85,11 +97,10 @@ function review(i) {
     return
   }
 
-  compliments[i].points = points
-  compliments[i].review = rev || ""
-
-  save()
-  render()
+  await updateDoc(doc(db, "compliments", id), {
+    points: points,
+    review: rev || ""
+  })
 }
 
 /* RENDER */
@@ -103,17 +114,17 @@ function renderCompliments() {
   let box = document.getElementById("compliments")
   box.innerHTML = ""
 
-  compliments.forEach((c, i) => {
+  compliments.forEach((c) => {
     let div = document.createElement("div")
     div.className = "card"
 
     div.innerHTML = `
-      <p><b>Compliment:</b> ${c.text}</p>
-      <p>⭐ Points: ${c.points}</p>
+      <p><b>Compliment:</b> ${c.text || ""}</p>
+      <p>⭐ Points: ${c.points || 0}</p>
       ${c.review ? `<p>📝 Review: ${c.review}</p>` : ""}
       ${
         users[currentUser].role === "admin"
-          ? `<button onclick="review(${i})">Give Points & Review</button>`
+          ? `<button onclick="review('${c.id}')">Give Points & Review</button>`
           : ""
       }
     `
@@ -140,9 +151,7 @@ function updateStats() {
   if (totalPoints > 250) level = "Legend"
 
   document.getElementById("level").innerText = level
-
-  document.getElementById("progressBar").style.width =
-    Math.min(totalPoints, 100) + "%"
+  document.getElementById("progressBar").style.width = Math.min(totalPoints, 100) + "%"
 
   updateCat(streak)
 }
@@ -152,20 +161,9 @@ function updateCat(streak) {
   let emoji = "😸"
   let text = "Waiting for compliments..."
 
-  if (streak >= 3) {
-    emoji = "😺"
-    text = "Good streak going!"
-  }
-
-  if (streak >= 7) {
-    emoji = "😻"
-    text = "Amazing compliments!"
-  }
-
-  if (streak >= 14) {
-    emoji = "😽"
-    text = "Legendary charm!"
-  }
+  if (streak >= 3) { emoji = "😺"; text = "Good streak going!" }
+  if (streak >= 7) { emoji = "😻"; text = "Amazing compliments!" }
+  if (streak >= 14) { emoji = "😽"; text = "Legendary charm!" }
 
   document.getElementById("catEmoji").innerText = emoji
   document.getElementById("catText").innerText = text
@@ -185,3 +183,7 @@ function createHearts() {
     hearts.appendChild(heart)
   }
 }
+
+window.login = login
+window.addCompliment = addCompliment
+window.review = review
