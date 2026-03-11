@@ -1,86 +1,71 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>No Excuses 💌</title>
 
-<title>No Excuses 💌</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  />
 
-<link rel="stylesheet" href="style.css">
-
+  <link rel="stylesheet" href="style.css" />
 </head>
 
 <body>
+  <div class="hearts"></div>
 
-<div class="hearts"></div>
+  <div class="app">
+    <header>
+      <h1>No Excuses 💌</h1>
+      <p>Daily kindness missions</p>
+    </header>
 
-<div class="app">
+    <div id="login">
+      <input id="username" placeholder="User ID" />
+      <input id="password" type="password" placeholder="Password" />
+      <button onclick="login()">Login</button>
+    </div>
 
-<header>
-<h1>No Excuses 💌</h1>
-<p>Daily kindness missions</p>
-</header>
+    <div id="main" style="display:none">
+      <div class="topbar">
+        <div class="stat">
+          ⭐ Points
+          <p id="points">0</p>
+        </div>
 
-<!-- LOGIN -->
+        <div class="stat">
+          🔥 Streak
+          <p id="streak">0</p>
+        </div>
 
-<div id="login">
+        <div class="stat">
+          🏆 Level
+          <p id="level">Beginner</p>
+        </div>
+      </div>
 
-<input id="username" placeholder="User ID">
-<input id="password" type="password" placeholder="Password">
+      <div class="progress">
+        <div id="progressBar"></div>
+      </div>
 
-<button onclick="login()">Login</button>
+      <h2>💌 Compliments</h2>
 
-</div>
+      <div id="compliments"></div>
 
-<!-- MAIN APP -->
+      <button class="addBtn" onclick="addCompliment()">Add Compliment</button>
 
-<div id="main" style="display:none">
+      <div class="cat">
+        <div id="catEmoji">😸</div>
+        <p id="catText">Waiting for compliments...</p>
+      </div>
+    </div>
+  </div>
 
-<div class="topbar">
-
-<div class="stat">
-⭐ Points
-<p id="points">0</p>
-</div>
-
-<div class="stat">
-🔥 Streak
-<p id="streak">0</p>
-</div>
-
-<div class="stat">
-🏆 Level
-<p id="level">Beginner</p>
-</div>
-
-</div>
-
-<div class="progress">
-<div id="progressBar"></div>
-</div>
-
-<h2>💌 Compliments</h2>
-
-<div id="compliments"></div>
-
-<button onclick="addCompliment()">Add Compliment</button>
-
-<div class="cat">
-
-<div id="catEmoji">😸</div>
-
-<p id="catText">Waiting for compliments...</p>
-
-</div>
-
-</div>
-
-</div>
-
-<script src="script.js"></script>
-
+  <script type="module" src="script.js"></script>
 </body>
 
 </html>
