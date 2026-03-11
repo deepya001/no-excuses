@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>No Excuses 💌</title>
+
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<div class="hearts"></div>
+
+<div class="app">
+
+<header>
+<h1>No Excuses 💌</h1>
+<p>Daily kindness missions</p>
+</header>
+
+<!-- LOGIN -->
+
+<div id="login">
+
+<input id="username" placeholder="User ID">
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+</div>
+
+<!-- MAIN APP -->
+
+<div id="main" style="display:none">
+
+<div class="topbar">
+
+<div class="stat">
+⭐ Points
+<p id="points">0</p>
+</div>
+
+<div class="stat">
+🔥 Streak
+<p id="streak">0</p>
+</div>
+
+<div class="stat">
+🏆 Level
+<p id="level">Beginner</p>
+</div>
+
+</div>
+
+<div class="progress">
+<div id="progressBar"></div>
+</div>
+
+<h2>💌 Compliments</h2>
+
+<div id="compliments"></div>
+
+<button onclick="addCompliment()">Add Compliment</button>
+
+<div class="cat">
+
+<div id="catEmoji">😸</div>
+
+<p id="catText">Waiting for compliments...</p>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>

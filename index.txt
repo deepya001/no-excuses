@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>No Excuses 💌</title>
+
+<!-- Google Font -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<!-- CSS -->
+<link rel="stylesheet" href="style.css">
+
+</head>
+
+<body>
+
+<!-- Floating Hearts -->
+<div class="hearts"></div>
+
+<div class="app">
+
+<!-- HEADER -->
+<header>
+<h1>No Excuses 💌</h1>
+<p>Daily kindness missions</p>
+</header>
+
+
+<!-- LOGIN -->
+<div id="login">
+
+<input id="username" placeholder="User ID">
+
+<input id="password" type="password" placeholder="Password">
+
+<button onclick="login()">Login</button>
+
+</div>
+
+
+<!-- MAIN APP -->
+<div id="main" style="display:none">
+
+<!-- STATS -->
+<div class="topbar">
+
+<div class="stat">
+⭐ Points
+<p id="points">0</p>
+</div>
+
+<div class="stat">
+🔥 Streak
+<p id="streak">0</p>
+</div>
+
+<div class="stat">
+🏆 Level
+<p id="level">Beginner</p>
+</div>
+
+</div>
+
+
+<!-- PROGRESS BAR -->
+<div class="progress">
+<div id="progressBar"></div>
+</div>
+
+
+<!-- COMPLIMENTS -->
+<h2>💌 Compliments</h2>
+
+<div id="compliments"></div>
+
+
+<!-- ADD BUTTON -->
+<button class="addBtn" onclick="addCompliment()">Add Compliment</button>
+
+
+<!-- CAT -->
+<div class="cat">
+
+<div id="catEmoji">😸</div>
+
+<p id="catText">Waiting for compliments...</p>
+
+</div>
+
+</div>
+
+</div>
+
+<script src="script.js"></script>
+
+</body>
+
+</html>
